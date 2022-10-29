@@ -1,10 +1,4 @@
-pub struct Node {
-    pub value: u8,
-    pub left: Option<Box<Node>>,
-    pub right: Option<Box<Node>>,
-
-    pub pos: usize,
-}
+use crate::node::Node;
 
 pub struct BinaryTree {
     pub root: Box<Node>,
@@ -17,23 +11,18 @@ impl BinaryTree {
 
     pub fn print(self) -> String {
 	let mut res = String::new();
-	let mut test: Vec<u8> = Vec::new();
-	BinaryTree::traverse_tree(&mut res, &String::from(""), &String::from(""), &Some(self.root), &mut test);
-
-	println!("{:?}", test);
+	BinaryTree::traverse_tree(&mut res, &String::from(""), &String::from(""), &Some(self.root));
 
 	res
     }
 
-    fn traverse_tree(str: &mut String, padding: &String, pointer: &String, node: &Option<Box<Node>>, test: &mut Vec<u8>) {
+    fn traverse_tree(str: &mut String, padding: &String, pointer: &String, node: &Option<Box<Node>>) {
 	if let Some(node) = node {
 	    str.push_str(&padding);
 	    str.push_str(&pointer);
 	    str.push_str("Node value: ");
 	    str.push_str(&node.value.to_string());
 	    str.push('\n');
-
-	    test.push(node.value);
 
 	    let mut padding_builder = String::from(padding);
 	    padding_builder.push_str("│  ");
@@ -45,8 +34,8 @@ impl BinaryTree {
 		None => String::from("└──")
 	    };
 	    
-	    BinaryTree::traverse_tree(str, &padding_both, &pointer_left, &node.left, test);
-	    BinaryTree::traverse_tree(str, &padding_both, &pointer_right, &node.right, test);
+	    BinaryTree::traverse_tree(str, &padding_both, &pointer_left, &node.left);
+	    BinaryTree::traverse_tree(str, &padding_both, &pointer_right, &node.right);
 	}
     }
 
