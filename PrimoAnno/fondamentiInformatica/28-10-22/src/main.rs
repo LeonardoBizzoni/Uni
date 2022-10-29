@@ -53,6 +53,10 @@ fn main() -> ExitCode {
     }
 
     tree_root.print();
+    println!("Complete: {}", tree_root.is_complete());
+    // println!("Full: {}", tree_root.is_full());
+    // println!("Balanced: {}", tree_root.is_balanced());
+    // println!("BST: {}", tree_root.is_bst());
 
     ExitCode::SUCCESS
 }
