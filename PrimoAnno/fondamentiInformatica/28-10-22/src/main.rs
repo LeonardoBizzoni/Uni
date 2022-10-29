@@ -52,7 +52,7 @@ fn main() -> ExitCode {
         tree_root.add_node(num, pos+2);
     }
 
-    println!("{}", tree_root.print());
+    tree_root.print();
 
     ExitCode::SUCCESS
 }

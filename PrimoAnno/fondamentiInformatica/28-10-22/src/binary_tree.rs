@@ -9,34 +9,73 @@ impl BinaryTree {
         Self { root: Box::new(Node { value, left: None, right: None, pos }) }
     }
 
-    pub fn print(self) -> String {
-	let mut res = String::new();
-	BinaryTree::traverse_tree(&mut res, &String::from(""), &String::from(""), &Some(self.root));
-
-	res
+    pub fn print(self) {
+	println!("{}", BinaryTree::traverse_pre_order(&Some(self.root)));
     }
 
-    fn traverse_tree(str: &mut String, padding: &String, pointer: &String, node: &Option<Box<Node>>) {
-	if let Some(node) = node {
-	    str.push_str(&padding);
-	    str.push_str(&pointer);
-	    str.push_str("Node value: ");
-	    str.push_str(&node.value.to_string());
-	    str.push('\n');
+    fn traverse_pre_order(node: &Option<Box<Node>>) -> String {
+	match node {
+	    Some(node) => {
+		let mut str = String::new();
+		let mut has_right = false;
 
-	    let mut padding_builder = String::from(padding);
-	    padding_builder.push_str("│  ");
+	        str.push_str("Root value: ");
+	        str.push_str(&node.value.to_string());
+	        str.push('\n');
 
-	    let padding_both = String::from(padding_builder);
-	    let pointer_right = String::from("└──");
-	    let pointer_left = match node.right {
-		Some(_) => String::from("├──"),
-		None => String::from("└──")
-	    };
-	    
-	    BinaryTree::traverse_tree(str, &padding_both, &pointer_left, &node.left);
-	    BinaryTree::traverse_tree(str, &padding_both, &pointer_right, &node.right);
+	        let pointer_right = String::from("    └── Right value: ");
+	        let pointer_left = match node.right {
+		    Some(_) => {
+			has_right = true;
+			String::from("    ├── Left value:  ")
+		    }
+		    _ => String::from("    └── Left value:  ")
+	        };
+
+
+		BinaryTree::traverse_tree(&mut str, &String::from(""), &pointer_left, &node.left, has_right);
+		BinaryTree::traverse_tree(&mut str, &String::from(""), &pointer_right, &node.right, false);
+
+		str
+	    }
+	    _ => String::from("")
 	}
+    }
+
+    fn traverse_tree(str: &mut String, padding: &String, pointer: &String, node: &Option<Box<Node>>, has_right_branch: bool) {
+	match node {
+	    Some(node) => {
+		let mut next_has_right = false;
+
+	        str.push_str(&padding);
+	        str.push_str(&pointer);
+	        str.push_str(&node.value.to_string());
+	        str.push('\n');
+
+	        let mut padding_builder = String::from(padding);
+	        match has_right_branch {
+		    true => padding_builder.push_str("    │  "),
+		    _ => padding_builder.push_str("       ")
+	        }
+	    
+
+	        let padding_both = String::from(padding_builder);
+	        let pointer_right = String::from("    └── Right value: ");
+	        let pointer_left = match node.right {
+		    Some(_) => {
+			next_has_right = true;
+			String::from("    ├── Left value:  ")
+		    }
+		    _ => String::from("    └── Left value:  ")
+	        };
+	    
+	        BinaryTree::traverse_tree(str, &padding_both, &pointer_left, &node.left, next_has_right);
+	        BinaryTree::traverse_tree(str, &padding_both, &pointer_right, &node.right, false);
+	    }
+	    _ => {
+		str.push_str(&String::from(""));
+	}
+}
     }
 
     fn recursive_add_node(current: &mut Option<Box<Node>>, value: u8, pos: usize, prev_pos: &usize) -> Result<(), ()>{
