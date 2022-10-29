@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct Node {
     pub value: u8,
     pub left: Option<Box<Node>>,

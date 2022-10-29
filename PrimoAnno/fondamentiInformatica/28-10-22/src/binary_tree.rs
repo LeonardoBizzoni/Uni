@@ -9,8 +9,8 @@ impl BinaryTree {
         Self { root: Box::new(Node { value, left: None, right: None, pos }) }
     }
 
-    pub fn print(self) {
-	println!("{}", BinaryTree::traverse_pre_order(&Some(self.root)));
+    pub fn print(&self) {
+	println!("{}", BinaryTree::traverse_pre_order(&Some(self.root.clone())));
     }
 
     fn traverse_pre_order(node: &Option<Box<Node>>) -> String {
