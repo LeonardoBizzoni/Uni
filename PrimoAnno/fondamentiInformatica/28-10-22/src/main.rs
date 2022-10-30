@@ -2,7 +2,7 @@ mod node;
 mod binary_tree;
 mod utils;
 
-use std::{io, process::ExitCode};
+use std::{io::{self, Write}, process::ExitCode};
 
 fn main() -> ExitCode {
     let mut binary_str = String::new();
@@ -22,7 +22,8 @@ fn main() -> ExitCode {
     }
 
     binary_str.remove(0);
-    println!("Enter root node value: ");
+    print!("Enter root node value: ");
+    let _ = io::stdout().flush();
     io::stdin()
         .read_line(&mut tree_value_input)
         .expect("Couldn't read value from stdin");
@@ -31,31 +32,23 @@ fn main() -> ExitCode {
 
     for (pos, ch) in binary_str.chars().enumerate() {
         let mut tree_value_input = String::new();
-        num = 0;
 
         if ch == '1' {
-	    num = loop {
-		println!("Enter node value: ");
-		io::stdin()
-                    .read_line(&mut tree_value_input)
-                    .expect("Couldn't read value from stdin");
-		
-		let num: u8 = tree_value_input.trim().parse().expect("NaN");
-		if num > 0 {
-		    break num;
-		} else {
-		    eprintln!("Invalid value: value should be greater then 0");
-		}
-	    };
-        }
+	    print!("Enter node value: ");
+	    let _ = io::stdout().flush();
+	    io::stdin()
+                .read_line(&mut tree_value_input)
+                .expect("Couldn't read value from stdin");
+	    num = tree_value_input.trim().parse().expect("NaN");
 
-        tree_root.add_node(num, pos+2);
+            tree_root.add_node(num, pos+2);
+        }
     }
 
     tree_root.print();
     println!("Complete: {}", tree_root.is_complete());
-    // println!("Full: {}", tree_root.is_full());
-    // println!("Balanced: {}", tree_root.is_balanced());
+    println!("Full: {}", tree_root.is_full(&Some(tree_root.root.clone())));
+    println!("Balanced: {}", tree_root.is_balanced(&Some(tree_root.root.clone())));
     // println!("BST: {}", tree_root.is_bst());
 
     ExitCode::SUCCESS
