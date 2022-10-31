@@ -27,8 +27,7 @@ fn main() -> ExitCode {
     io::stdin()
         .read_line(&mut tree_value_input)
         .expect("Couldn't read value from stdin");
-    let mut tree_root =
-        binary_tree::BinaryTree::new(tree_value_input.trim().parse().expect("NaN"), 1);
+    let mut tree_root = binary_tree::BinaryTree::new(tree_value_input.trim().parse().expect("NaN"), 1);
 
     for (pos, ch) in binary_str.chars().enumerate() {
         let mut tree_value_input = String::new();
@@ -49,7 +48,7 @@ fn main() -> ExitCode {
     println!("Complete: {}", tree_root.is_complete());
     println!("Full: {}", tree_root.is_full(&Some(tree_root.root.clone())));
     println!("Balanced: {}", tree_root.is_balanced(&Some(tree_root.root.clone())));
-    // println!("BST: {}", tree_root.is_bst());
+    println!("BST: {}", tree_root.is_bst(&Some(tree_root.root.clone())));
 
     ExitCode::SUCCESS
 }

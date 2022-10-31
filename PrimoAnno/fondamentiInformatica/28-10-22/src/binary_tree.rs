@@ -1,6 +1,6 @@
 use queues::*;
 
-use crate::node::Node;
+use crate::node::{Node, self};
 
 pub struct BinaryTree {
     pub root: Box<Node>,
@@ -111,8 +111,29 @@ impl BinaryTree {
 	false
     }
 
-    pub fn _is_bst(&self) -> bool {
-        todo!()
+    pub fn is_bst(&self, node: &Option<Box<Node>>) -> bool {
+	match node {
+	    Some(node) => {
+		if let Some(left) = &node.left {
+		    if !(left.value < node.value) {
+			return false;
+		    }
+		}
+
+		if let Some(right) = &node.right {
+		    if !(right.value > node.value) {
+			return false;
+		    }
+		}
+
+		if !self.is_bst(&node.left) || !self.is_bst(&node.right) {
+		    return false;
+		}
+
+		true
+	    }
+	    _ => true
+	}
     }
 
     pub fn print(&self) {
