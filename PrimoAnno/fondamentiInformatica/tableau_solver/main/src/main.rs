@@ -13,9 +13,9 @@ fn main() -> io::Result<()> {
     let input_buffer: String = input_buffer.trim().to_string();
 
     if Formula::check_syntax(&input_buffer) {
-	println!("epico");
+	let fbf = Formula::new(input_buffer);
     } else {
-	println!("Invalid formula");
+	eprintln!("Invalid formula");
     }
 
     Ok(())
