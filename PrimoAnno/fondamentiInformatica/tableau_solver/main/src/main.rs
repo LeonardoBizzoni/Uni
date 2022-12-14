@@ -14,6 +14,7 @@ fn main() -> io::Result<()> {
 
     if Formula::check_syntax(&input_buffer) {
 	let fbf = Formula::new(input_buffer);
+	println!("{:?}", fbf.syntax_tree);
     } else {
 	eprintln!("Invalid formula");
     }
