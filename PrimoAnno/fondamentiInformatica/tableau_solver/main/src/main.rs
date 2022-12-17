@@ -13,8 +13,21 @@ fn main() -> io::Result<()> {
     let input_buffer: String = input_buffer.trim().to_string();
 
     if Formula::check_syntax(&input_buffer) {
-	let fbf = Formula::new(input_buffer);
+	let mut fbf = Formula::new(input_buffer);
+	fbf.find_variables(&fbf.syntax_tree.clone(), 0);
+	fbf.evaluate_formula();
+	
 	println!("{}", fbf.syntax_tree);
+	print!("Modelli: ");
+	for ele in fbf.models {
+	    print!("{} ", ele);
+	}
+	print!("\nContromodelli: ");
+	for ele in fbf.contradictions {
+	    print!("{} ", ele);
+	}
+
+	println!();
     } else {
 	eprintln!("Invalid formula");
     }

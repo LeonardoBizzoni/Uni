@@ -1,13 +1,11 @@
 use std::fmt;
-
 use crate::ElementType;
 
-#[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Tree {
-    root: char,
-    left: Option<Box<Tree>>,
-    right: Option<Box<Tree>>,
+    pub root: char,
+    pub left: Option<Box<Tree>>,
+    pub right: Option<Box<Tree>>,
 }
 
 impl Tree {

@@ -1,5 +1,7 @@
 mod tree;
 mod formula;
+mod atom;
+mod eval;
 
 pub use formula::Formula;
 

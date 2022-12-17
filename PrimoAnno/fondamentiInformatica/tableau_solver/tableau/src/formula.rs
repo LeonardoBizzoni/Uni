@@ -1,9 +1,17 @@
+use std::collections::HashMap;
+
+use crate::atom::Atom;
+use crate::eval::Eval;
 use crate::tree::Tree;
 use crate::LogicType;
 
+#[derive(Clone)]
 pub struct Formula {
     pub formula: String,
     pub syntax_tree: Tree,
+    pub variable_map: HashMap<usize, Atom>,
+    pub models: Vec<Eval>,
+    pub contradictions: Vec<Eval>,
 }
 
 impl Formula {
@@ -11,7 +19,112 @@ impl Formula {
         Formula {
             formula: formula.clone(),
             syntax_tree: Tree::new(&formula),
+            variable_map: HashMap::new(),
+            models: Vec::new(),
+            contradictions: Vec::new(),
         }
+    }
+
+    pub fn evaluate_formula(&mut self) {
+        let max_bit: i32 = (2 as i32).pow(self.variable_map.len() as u32);
+
+        for assignment in 0..max_bit {
+            let bits = Self::to_bin(assignment, self.variable_map.len());
+
+            bits.iter()
+                .enumerate()
+                .for_each(|(idx, value)| match *value {
+                    0 => self.variable_map.get_mut(&idx).unwrap().set_value(false),
+                    1 => self.variable_map.get_mut(&idx).unwrap().set_value(true),
+                    _ => {}
+                });
+
+            println!("Assignment: {:?}", self.variable_map.values());
+            if Self::evaluate_assignment(&self.syntax_tree, &self.variable_map) {
+                self.models.push(Eval {
+                    assignment: self
+                        .variable_map
+                        .clone()
+                        .into_iter()
+                        .filter(|(_, eval)| eval.value)
+                        .map(|(_, eval)| eval.name)
+                        .collect::<Vec<char>>(),
+                });
+            } else {
+                self.contradictions.push(Eval {
+                    assignment: self
+                        .variable_map
+                        .clone()
+                        .into_iter()
+                        .filter(|(_, eval)| eval.value)
+                        .map(|(_, eval)| eval.name)
+                        .collect::<Vec<char>>(),
+                });
+            }
+        }
+    }
+
+    fn evaluate_assignment(tree: &Tree, assignment: &HashMap<usize, Atom>) -> bool {
+        if tree.root.is_alphabetic() {
+            return assignment
+                .values()
+                .find(|eval| eval.name == tree.root)
+                .unwrap()
+                .value;
+        } else if tree.root == '!' {
+            return !Self::evaluate_assignment(tree.right.as_ref().unwrap(), assignment);
+        }
+
+        let left = Self::evaluate_assignment(tree.left.as_ref().unwrap(), assignment);
+        let right = Self::evaluate_assignment(tree.right.as_ref().unwrap(), assignment);
+
+        match tree.root {
+            '&' => left && right,
+            '|' => left || right,
+            '>' => !left || right,
+            '-' => left == right,
+            _ => panic!("No idea"),
+        }
+    }
+
+    fn to_bin(mut n: i32, capacity: usize) -> Vec<i32> {
+        let mut res: Vec<i32> = Vec::with_capacity(capacity);
+
+        while n > 0 {
+            res.push(n % 2);
+            n /= 2;
+        }
+
+        res
+    }
+    pub fn find_variables(&mut self, tree: &Tree, mut idx: usize) -> usize {
+        if tree.left.is_none() && tree.right.is_none() {
+            if !self
+                .variable_map
+                .values()
+                .any(|eval| eval.name == tree.root)
+            {
+                self.variable_map.insert(
+                    idx,
+                    Atom {
+                        name: tree.root,
+                        value: false,
+                    },
+                );
+                return idx + 1;
+            }
+
+            return idx;
+        }
+
+        if tree.left.is_some() {
+            idx = self.find_variables(tree.left.as_ref().unwrap(), idx);
+        }
+        if tree.right.is_some() {
+            idx = self.find_variables(tree.right.as_ref().unwrap(), idx);
+        }
+
+        idx
     }
 
     pub fn check_syntax(formula: &String) -> bool {
