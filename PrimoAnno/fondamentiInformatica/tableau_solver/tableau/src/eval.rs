@@ -16,10 +16,6 @@ impl Display for Eval {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 	let mut res: String = String::new();
 
-	if self.assignment.len() == 0 {
-	    return write!(f, "{{}}");
-	}
-
 	self.assignment.iter().for_each(|assign| {
 	    res.push(*assign);
 	});
