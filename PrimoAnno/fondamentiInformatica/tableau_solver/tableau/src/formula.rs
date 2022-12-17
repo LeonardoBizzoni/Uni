@@ -39,27 +39,20 @@ impl Formula {
                     _ => {}
                 });
 
-            println!("Assignment: {:?}", self.variable_map.values());
+            let eval = Eval {
+                assignment: self
+                .variable_map
+                .clone()
+                .into_iter()
+                .filter(|(_, eval)| eval.value)
+                .map(|(_, eval)| eval.name)
+                .collect::<Vec<char>>(),
+            };
+            
             if Self::evaluate_assignment(&self.syntax_tree, &self.variable_map) {
-                self.models.push(Eval {
-                    assignment: self
-                        .variable_map
-                        .clone()
-                        .into_iter()
-                        .filter(|(_, eval)| eval.value)
-                        .map(|(_, eval)| eval.name)
-                        .collect::<Vec<char>>(),
-                });
+                self.models.push(eval);
             } else {
-                self.contradictions.push(Eval {
-                    assignment: self
-                        .variable_map
-                        .clone()
-                        .into_iter()
-                        .filter(|(_, eval)| eval.value)
-                        .map(|(_, eval)| eval.name)
-                        .collect::<Vec<char>>(),
-                });
+                self.contradictions.push(eval);
             }
         }
     }
