@@ -90,8 +90,9 @@ impl Formula {
 
         res
     }
+
     pub fn find_variables(&mut self, tree: &Tree, mut idx: usize) -> usize {
-        if tree.left.is_none() && tree.right.is_none() {
+        if tree.root.is_alphabetic() {
             if !self
                 .variable_map
                 .values()
@@ -158,6 +159,16 @@ impl Formula {
         }
 
         Self::check_stacks(&mut op_stack, &mut var_stack)
+    }
+
+    pub fn get_type(&self) -> String {
+	return if self.models.len() == 0 {
+	    String::from("Contraddizione")
+	} else if self.contradictions.len() == 0 {
+	    String::from("Tautologia")
+	} else {
+	    String::from("Soddisfacibile non tautologica")
+	}
     }
 
     fn check_stacks(op_stack: &mut Vec<LogicType>, var_stack: &mut Vec<char>) -> bool {

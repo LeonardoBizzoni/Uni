@@ -19,15 +19,15 @@ fn main() -> io::Result<()> {
 	
 	println!("{}", fbf.syntax_tree);
 	print!("Modelli: ");
-	for ele in fbf.models {
+	for ele in fbf.models.iter() {
 	    print!("{} ", ele);
 	}
 	print!("\nContromodelli: ");
-	for ele in fbf.contradictions {
+	for ele in fbf.contradictions.iter() {
 	    print!("{} ", ele);
 	}
 
-	println!();
+	println!("\nLa formula è: {}", fbf.get_type());
     } else {
 	eprintln!("Invalid formula");
     }
