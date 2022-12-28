@@ -3,7 +3,7 @@
  */
 public class Main {
 	public static void main(String[] args) {
-		if (args.length < 2 || args.length >= 3) {
+		if (args.length != 2) {
 			System.out.println("Input non valido");
 			System.exit(1);
 		}
@@ -46,8 +46,6 @@ public class Main {
 			_last_value--;
 		}
 
-		System.out.println(_last_value);
-
 		if (_last_value != -1) {
 			return false;
 		}
@@ -55,7 +53,6 @@ public class Main {
 	}
 
 	private static boolean checkValori(String valori) {
-		System.out.println("checkValori: Got: " + valori);
 		boolean prev_was_num = valori.charAt(0) >= 'A' && valori.charAt(0) <= 'E' ? true : false;
 		boolean prev_was_var = false;
 		boolean prev_was_colon = false;
@@ -84,7 +81,6 @@ public class Main {
 	}
 
 	private static void estraiValori(String valori, int[] table) {
-		System.out.println("estraiValori: Got: " + valori);
 		for (int i = 0; i < valori.length(); i++) {
 			var ch = valori.charAt(i);
 
@@ -109,7 +105,6 @@ public class Main {
 	}
 
 	private static String sostituisci(String espressioni, int[] table) {
-		System.out.println("Sostituisci: Got: " + espressioni);
 		String res = "";
 
 		for (int i = 0; i < espressioni.length(); i++) {
@@ -140,7 +135,6 @@ public class Main {
 	}
 
 	private static int calcola(String daCalc) {
-		System.out.println("Calcola: Got: " + daCalc);
 		var nums = new int[daCalc.length()];
 		var op = new char[daCalc.length()];
 
@@ -159,18 +153,13 @@ public class Main {
 		}
 
 		while (_last_op > 0) {
-			for (int i=0; i<nums.length; i++) {
-				System.out.print(nums[i]+" ");
-			}
-			System.out.println();
-			
 			var n1 = nums[--_last_num];
 			var n2 = nums[--_last_num];
 
 			if (op[--_last_op] == '+') {
 				nums[_last_num] = n1 + n2;
 			} else {
-				nums[_last_num] = n1 - n2;
+				nums[_last_num] = n2 - n1;
 			}
 			_last_num++;
 		}
