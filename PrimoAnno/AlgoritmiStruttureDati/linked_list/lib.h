@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
@@ -21,3 +22,5 @@ template <typename T> node<T> *next(node<T> *head, T key);
 template <typename T> void print_list(node<T> *node);
 template <typename T> void print_list(const char *prefix, node<T> *node);
 template <typename T> void print_node(const char *prefix, node<T> *node);
+
+#include "lib.cpp"
