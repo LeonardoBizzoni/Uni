@@ -53,6 +53,16 @@ node_print(Stream, Node, NTabs, CTabs) :-
     Tabs is NTabs - 1,
     node_print(Stream, Node, Tabs, CTabs).
 
+node_min(node(K, _, nil, _), K) :- !.
+node_min(node(_, _, L, _), Min) :-
+    L \= nil, !,
+    node_min(L, Min).
+
+node_max(node(K, _, _, nil), K) :- !.
+node_max(node(_, _, _, R), Max) :-
+    R \= nil, !,
+    node_max(R, Max).
+
 is_treedict(treedict(_Nome, Root)) :-
     is_node(Root).
 
